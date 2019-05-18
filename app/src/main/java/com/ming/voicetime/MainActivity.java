@@ -77,10 +77,10 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
 
         tv_vocie_dur = findViewById(R.id.tv_vocie_dur);
         saveDelayMillis = SpUtil.getTimeValue();
-        tv_vocie_dur.setText(saveDelayMillis / TimeDateUtil.ONE_MINTER + "");
+        tv_vocie_dur.setText(String.valueOf(saveDelayMillis / TimeDateUtil.ONE_MINTER));
 
         tv_version = findViewById(R.id.tv_version);
-        tv_version.setText("版本："+ VersionUtil.getVerName(this));
+        tv_version.setText("版本：" + VersionUtil.getVerName(this));
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         });
         tvConfirm.setOnClickListener(v -> {
             saveDelayMillis = minutePicker.getValue() * TimeDateUtil.ONE_MINTER;
-            tv_vocie_dur.setText(minutePicker.getValue());
+            tv_vocie_dur.setText(String.valueOf(minutePicker.getValue()));
             SpUtil.putTimeValue(saveDelayMillis);
             sendTask();
             dialog.dismiss();
