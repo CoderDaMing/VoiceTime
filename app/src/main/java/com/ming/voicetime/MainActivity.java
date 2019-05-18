@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         NumberPicker minutePicker = view.findViewById(R.id.minuteicker);
         minutePicker.setMaxValue(60);
         minutePicker.setMinValue(1);
-        minutePicker.setValue(1);
+        minutePicker.setValue((int) (saveDelayMillis / TimeDateUtil.ONE_MINTER));
         //设置为对当前值不可编辑
         minutePicker.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);
         TextView tvCancel = view.findViewById(R.id.tv_cancel);
@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         });
         tvConfirm.setOnClickListener(v -> {
             saveDelayMillis = minutePicker.getValue() * TimeDateUtil.ONE_MINTER;
+            tv_vocie_dur.setText(minutePicker.getValue());
             SpUtil.putTimeValue(saveDelayMillis);
             sendTask();
             dialog.dismiss();
