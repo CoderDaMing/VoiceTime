@@ -1,0 +1,225 @@
+androidx.versionedparcelable.ParcelUtils
+com.google.android.material.internal.package-info
+android.arch.lifecycle.Transformations$2$1
+androidx.versionedparcelable.VersionedParcelParcel
+    public void writeByteArray(byte[],int,int)
+    public void writeLong(long)
+    public void writeFloat(float)
+    public void writeDouble(double)
+    public void writeStrongBinder(android.os.IBinder)
+    public void writeBoolean(boolean)
+    public void writeStrongInterface(android.os.IInterface)
+    public void writeBundle(android.os.Bundle)
+    public long readLong()
+    public float readFloat()
+    public double readDouble()
+    public android.os.IBinder readStrongBinder()
+    public android.os.Bundle readBundle()
+    public boolean readBoolean()
+    private static final boolean DEBUG
+    private static final java.lang.String TAG
+android.arch.lifecycle.livedata.R
+com.ming.voicetime.BuildConfig
+com.ming.voicetime.view.SmartisanTime
+    private int startMeasure(int)
+    private static final int DIAL_BG
+    private static final int RING_BG
+    private static final int TEXT_COLOR
+    private static final int HOUR_MINUTE_COLOR
+    private static final int SECOND_COLOR
+    private static final int MIN_SIZE
+    private static final int HOUR_MINUTE_WIDTH
+    private static final int SECOND_WIDTH
+    private static final int DEGREE
+android.arch.lifecycle.MediatorLiveData$Source
+android.arch.lifecycle.ViewModelProvider
+    public void <init>(android.arch.lifecycle.ViewModelStoreOwner,android.arch.lifecycle.ViewModelProvider$Factory)
+    private static final java.lang.String DEFAULT_KEY
+android.arch.lifecycle.Transformations
+android.arch.lifecycle.ViewModelProvider$NewInstanceFactory
+android.arch.lifecycle.ViewModelProvider$AndroidViewModelFactory
+android.arch.lifecycle.ComputableLiveData$3
+android.arch.lifecycle.R
+androidx.core.internal.package-info
+android.arch.lifecycle.ComputableLiveData
+androidx.versionedparcelable.R
+android.arch.core.executor.TaskExecutor
+    public void executeOnMainThread(java.lang.Runnable)
+androidx.versionedparcelable.ParcelField
+android.arch.core.util.Function
+android.arch.lifecycle.MediatorLiveData
+com.ming.voicetime.util.TextToSpeechUtil
+    private static final java.lang.String TAG
+com.ming.voicetime.util.SpUtil
+    public void <init>()
+    public static final java.lang.String SP_FILE_NAME
+    public static final java.lang.String SP_SAVE_TIME_KEY
+android.arch.lifecycle.ComputableLiveData$2
+android.arch.lifecycle.AndroidViewModel
+    public void <init>(android.app.Application)
+    public android.app.Application getApplication()
+    private android.app.Application mApplication
+android.arch.lifecycle.Transformations$2
+android.arch.lifecycle.Lifecycling
+    public void <init>()
+    private static final int REFLECTIVE_CALLBACK
+    private static final int GENERATED_CALLBACK
+androidx.versionedparcelable.VersionedParcel$ParcelException
+com.ming.voicetime.R
+androidx.versionedparcelable.VersionedParcelStream
+androidx.versionedparcelable.VersionedParcelStream$InputBuffer
+android.arch.core.executor.ArchTaskExecutor
+    public static java.util.concurrent.Executor getMainThreadExecutor()
+    public static java.util.concurrent.Executor getIOThreadExecutor()
+    public void setDelegate(android.arch.core.executor.TaskExecutor)
+android.arch.lifecycle.ReportFragment
+    static android.arch.lifecycle.ReportFragment get(android.app.Activity)
+    void setProcessListener(android.arch.lifecycle.ReportFragment$ActivityInitializationListener)
+    private static final java.lang.String REPORT_FRAGMENT_TAG
+android.arch.lifecycle.MethodCallsLogger
+    public boolean approveCall(java.lang.String,int)
+androidx.versionedparcelable.ParcelImpl
+    public void <init>(androidx.versionedparcelable.VersionedParcelable)
+    public androidx.versionedparcelable.VersionedParcelable getVersionedParcel()
+com.ming.voicetime.permissions.PermissionHelper
+    public void <init>()
+    private boolean checkRecordAudioPermission(android.app.Activity)
+    private boolean checkCameraPermission(android.app.Activity)
+    private boolean checkLocationPermission(android.app.Activity)
+    public boolean checkRecordAudio(android.app.Activity)
+    public boolean checkCamera(android.app.Activity)
+    public boolean checkLocation(android.app.Activity)
+    public boolean hasOnePermission(android.content.Context,java.lang.String)
+androidx.versionedparcelable.VersionedParcelStream$FieldBuffer
+android.arch.lifecycle.LifecycleRegistry
+    public int getObserverCount()
+    private static final java.lang.String LOG_TAG
+android.arch.lifecycle.viewmodel.R
+android.arch.lifecycle.ComputableLiveData$1
+com.ming.voicetime.util.VersionUtil
+    public void <init>()
+android.arch.lifecycle.livedata.core.R
+androidx.versionedparcelable.VersionedParcel$1
+android.arch.lifecycle.Transformations$1
+androidx.versionedparcelable.NonParcelField
+android.arch.core.R
+com.ming.voicetime.util.TimeDateUtil
+    public void <init>()
+    public static final java.lang.String ymd
+    public static final java.lang.String hm
+    public static final long ONE_MINTER
+androidx.versionedparcelable.VersionedParcelize
+android.arch.lifecycle.ClassesInfoCache
+    private static final int CALL_TYPE_NO_ARG
+    private static final int CALL_TYPE_PROVIDER
+    private static final int CALL_TYPE_PROVIDER_WITH_EVENT
+androidx.versionedparcelable.VersionedParcel
+    private void writeCollection(java.util.Collection,int)
+    private int getType(java.lang.Object)
+    private void writeSerializable(java.io.Serializable)
+    private int readExceptionCode()
+    private java.lang.Exception readException(int,java.lang.String)
+    protected static java.lang.Throwable getRootCause(java.lang.Throwable)
+    private java.lang.Exception createException(int,java.lang.String)
+    private java.util.Collection readCollection(int,java.util.Collection)
+    protected abstract void writeByteArray(byte[],int,int)
+    protected abstract void writeLong(long)
+    protected abstract void writeFloat(float)
+    protected abstract void writeDouble(double)
+    protected abstract void writeStrongBinder(android.os.IBinder)
+    protected abstract void writeBoolean(boolean)
+    protected abstract void writeStrongInterface(android.os.IInterface)
+    protected abstract void writeBundle(android.os.Bundle)
+    protected abstract long readLong()
+    protected abstract float readFloat()
+    protected abstract double readDouble()
+    protected abstract android.os.IBinder readStrongBinder()
+    protected abstract android.os.Bundle readBundle()
+    protected abstract boolean readBoolean()
+    public void writeStrongInterface(android.os.IInterface,int)
+    public void writeBundle(android.os.Bundle,int)
+    public void writeBoolean(boolean,int)
+    public void writeByteArray(byte[],int,int,int)
+    public void writeLong(long,int)
+    public void writeFloat(float,int)
+    public void writeDouble(double,int)
+    public void writeStrongBinder(android.os.IBinder,int)
+    public boolean readBoolean(boolean,int)
+    public long readLong(long,int)
+    public float readFloat(float,int)
+    public double readDouble(double,int)
+    public android.os.IBinder readStrongBinder(android.os.IBinder,int)
+    public android.os.Bundle readBundle(android.os.Bundle,int)
+    public void writeByte(byte,int)
+    public void writeSize(android.util.Size,int)
+    public void writeSizeF(android.util.SizeF,int)
+    public void writeSparseBooleanArray(android.util.SparseBooleanArray,int)
+    public void writeBooleanArray(boolean[],int)
+    protected void writeBooleanArray(boolean[])
+    public boolean[] readBooleanArray(boolean[],int)
+    protected boolean[] readBooleanArray()
+    public void writeCharArray(char[],int)
+    public char[] readCharArray(char[],int)
+    public void writeIntArray(int[],int)
+    protected void writeIntArray(int[])
+    public int[] readIntArray(int[],int)
+    protected int[] readIntArray()
+    public void writeLongArray(long[],int)
+    protected void writeLongArray(long[])
+    public long[] readLongArray(long[],int)
+    protected long[] readLongArray()
+    public void writeFloatArray(float[],int)
+    protected void writeFloatArray(float[])
+    public float[] readFloatArray(float[],int)
+    protected float[] readFloatArray()
+    public void writeDoubleArray(double[],int)
+    protected void writeDoubleArray(double[])
+    public double[] readDoubleArray(double[],int)
+    protected double[] readDoubleArray()
+    public void writeSet(java.util.Set,int)
+    public void writeList(java.util.List,int)
+    public void writeArray(java.lang.Object[],int)
+    protected void writeArray(java.lang.Object[])
+    public void writeVersionedParcelable(androidx.versionedparcelable.VersionedParcelable,int)
+    public void writeSerializable(java.io.Serializable,int)
+    public void writeException(java.lang.Exception,int)
+    protected void writeNoException()
+    public java.lang.Exception readException(java.lang.Exception,int)
+    public byte readByte(byte,int)
+    public android.util.Size readSize(android.util.Size,int)
+    public android.util.SizeF readSizeF(android.util.SizeF,int)
+    public android.util.SparseBooleanArray readSparseBooleanArray(android.util.SparseBooleanArray,int)
+    public java.util.Set readSet(java.util.Set,int)
+    public java.util.List readList(java.util.List,int)
+    public java.lang.Object[] readArray(java.lang.Object[],int)
+    protected java.lang.Object[] readArray(java.lang.Object[])
+    public androidx.versionedparcelable.VersionedParcelable readVersionedParcelable(androidx.versionedparcelable.VersionedParcelable,int)
+    protected java.io.Serializable readSerializable()
+    private static final java.lang.String TAG
+    private static final int EX_SECURITY
+    private static final int EX_BAD_PARCELABLE
+    private static final int EX_ILLEGAL_ARGUMENT
+    private static final int EX_NULL_POINTER
+    private static final int EX_ILLEGAL_STATE
+    private static final int EX_NETWORK_MAIN_THREAD
+    private static final int EX_UNSUPPORTED_OPERATION
+    private static final int EX_PARCELABLE
+    private static final int TYPE_VERSIONED_PARCELABLE
+    private static final int TYPE_PARCELABLE
+    private static final int TYPE_SERIALIZABLE
+    private static final int TYPE_STRING
+    private static final int TYPE_BINDER
+com.ming.voicetime.permissions.PermissionsUtil
+    public boolean checkRecordAudioPermission(android.app.Activity)
+    public void requestForRecordAudioPermission(android.app.Activity)
+    public boolean checkCameraPermission(android.app.Activity)
+    public void requestForCameraPermission(android.app.Activity)
+    public boolean checkLocationPermission(android.app.Activity)
+    public void requestForLocationPermission(android.app.Activity)
+    public boolean hasOnePermission(android.content.Context,java.lang.String)
+    public static final int WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
+    public static final int READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
+    public static final int RECORD_AUDIO_PERMISSION_REQUEST_CODE
+    public static final int CAMERA_PERMISSION_REQUEST_CODE
+    public static final int LOCATION_PERMISSION_REQUEST_CODE
+    public static final int ACTION_APPLICATION_DETAILS_SETTINGS_REQUEST_CODE

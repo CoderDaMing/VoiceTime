@@ -23,11 +23,12 @@ import com.ming.voicetime.permissions.PermissionsUtil;
 import com.ming.voicetime.util.SpUtil;
 import com.ming.voicetime.util.TextToSpeechUtil;
 import com.ming.voicetime.util.TimeDateUtil;
+import com.ming.voicetime.util.VersionUtil;
 
 public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener {
     private PermissionHelper permissionHelper;
     private TextView tv_current_date;
-    private TextView tv_vocie_language;
+    private TextView tv_version;
     private TextView tv_vocie_dur;
     private FloatingActionButton fab;
 
@@ -51,11 +52,6 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(0, saveDelayMillis);
         TextToSpeechUtil.getInstance().setPlay(true);
-        if (TextToSpeechUtil.getInstance().isZh()){
-            tv_vocie_language.setText("中文");
-        }else {
-            tv_vocie_language.setText("英文");
-        }
     }
     //endregion
 
@@ -79,10 +75,12 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         tv_current_date = findViewById(R.id.tv_current_date);
         tv_current_date.setText(TimeDateUtil.long2String(System.currentTimeMillis(), TimeDateUtil.ymd));
 
-        tv_vocie_language = findViewById(R.id.tv_vocie_language);
         tv_vocie_dur = findViewById(R.id.tv_vocie_dur);
         saveDelayMillis = SpUtil.getTimeValue();
         tv_vocie_dur.setText(saveDelayMillis / TimeDateUtil.ONE_MINTER + "");
+
+        tv_version = findViewById(R.id.tv_version);
+        tv_version.setText("版本："+ VersionUtil.getVerName(this));
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);

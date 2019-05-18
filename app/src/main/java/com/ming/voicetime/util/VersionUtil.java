@@ -12,23 +12,23 @@ import android.content.pm.PackageManager;
  * Email:sunming@radacat.com
  */
 public class VersionUtil {
-    /**
-     * 获得app versionCode
-     *
-     * @param context
-     * @return versionCode
-     */
-    public static int getVersionCode(Context context) {
-        int versionCode = 0;
-        try {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-            versionCode = packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionCode;
-    }
+//    /**
+//     * 获得app versionCode
+//     *
+//     * @param context
+//     * @return versionCode
+//     */
+//    public static int getVersionCode(Context context) {
+//        int versionCode = 0;
+//        try {
+//            PackageManager packageManager = context.getPackageManager();
+//            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+//            versionCode = packageInfo.versionCode;
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return versionCode;
+//    }
 
     public static String getVerName(Context context) {
         try {
