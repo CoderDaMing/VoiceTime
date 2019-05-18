@@ -3,7 +3,6 @@ package com.ming.voicetime;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,19 +20,35 @@ import android.widget.TimePicker;
 import com.ming.voicetime.permissions.PermissionHelper;
 import com.ming.voicetime.permissions.PermissionCallBack;
 import com.ming.voicetime.permissions.PermissionsUtil;
+import com.ming.voicetime.util.SpUtil;
 import com.ming.voicetime.util.TextToSpeechUtil;
+import com.ming.voicetime.util.TimeDateUtil;
 
 public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener {
     private PermissionHelper permissionHelper;
+    private FloatingActionButton fab;
 
-    private static final long ONE_MINTER = 60000;
-    private final Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-
-            return false;
-        }
+    //region Handler
+    private long saveDelayMillis = TimeDateUtil.ONE_MINTER;
+    private final Handler mHandler = new Handler(msg -> {
+        TextToSpeechUtil.getInstance().speakCurrenTime();
+        sendTask();
+        return false;
     });
+
+    private void clearTask() {
+        mHandler.removeMessages(0);
+        mHandler.removeCallbacksAndMessages(null);
+        TextToSpeechUtil.getInstance().setPlay(false);
+    }
+
+    private void sendTask() {
+        mHandler.removeMessages(0);
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.sendEmptyMessageDelayed(0, saveDelayMillis);
+        TextToSpeechUtil.getInstance().setPlay(true);
+    }
+    //endregion
 
     //region 生命周期
     @Override
@@ -52,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
         initPermissionsHelper();
@@ -67,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        clearTask();
         TextToSpeechUtil.getInstance().destroy();
     }
     //endregion
@@ -75,14 +91,15 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
     public void onClick(View v) {
         Snackbar.make(v, "Start Task", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-        long saveDelayMillis =
-        startTask();
-    }
+        saveDelayMillis = SpUtil.getTimeValue();
+        if (TextToSpeechUtil.getInstance().isPlay()) {
+            clearTask();
+            fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
+        } else {
+            fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+            sendTask();
 
-    private void startTask(long delayMillis) {
-        mHandler.removeMessages(0);
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler.sendEmptyMessageDelayed(0, delayMillis);
+        }
     }
 
     //region 菜单
@@ -124,8 +141,13 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
             dialog.dismiss();
         });
         tvConfirm.setOnClickListener(v -> {
+            saveDelayMillis = minutePicker.getValue() * TimeDateUtil.ONE_MINTER;
+            SpUtil.putTimeValue(saveDelayMillis);
+            sendTask();
             dialog.dismiss();
         });
+        dialog.setContentView(view);
+        dialog.show();
     }
     //endregion
 

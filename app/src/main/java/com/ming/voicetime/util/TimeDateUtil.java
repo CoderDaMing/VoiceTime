@@ -16,6 +16,8 @@ public class TimeDateUtil {
     public static final String ymds = "yyyy年MM月dd日";
     public static final String hm = "HH:mm";
 
+    public static final long ONE_MINTER = 60000;
+
     //日期时间格式转换，包括String、Date、Long。Date是String和Long的桥梁。
 
     /**

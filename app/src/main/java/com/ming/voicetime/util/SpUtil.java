@@ -17,71 +17,21 @@ public class SpUtil {
     private static SharedPreferences sp;
 
 
-    /**
-     * @param fileName
-     * @param key
-     * @param value
-     */
-    public static void putValue(String fileName, String key, Object value) {
+    public static void putTimeValue(long value) {
         if (sp == null) {
-            sp = MyApp.getInstance().getSharedPreferences(fileName, Context.MODE_PRIVATE);
+            sp = MyApp.getInstance().getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE);
         }
         SharedPreferences.Editor editor = sp.edit();
-        if (value instanceof Boolean) {
-            editor.putBoolean(key, (Boolean) value);
-        }
-
-        if (value instanceof String) {
-            editor.putString(key, (String) value);
-        }
-
-        if (value instanceof Integer) {
-            editor.putInt(key, (Integer) value);
-        }
-
-        if (value instanceof Long) {
-            editor.putLong(key, (Long) value);
-        }
-
-        if (value instanceof Float) {
-            editor.putFloat(key, (Float) value);
-        }
+        editor.putLong(SP_SAVE_TIME_KEY, value);
         editor.apply();
     }
 
-
-    /**
-     * @param fileName
-     * @param key
-     * @param defValue
-     * @return
-     */
-    public static Object getValue(String fileName, String key, Object defValue) {
+    public static long getTimeValue() {
 
         if (sp == null) {
-            sp = MyApp.getInstance().getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        }
-        Object value = null;
-        if (defValue instanceof Boolean) {
-            value = sp.getBoolean(key, (Boolean) defValue);
+            sp = MyApp.getInstance().getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE);
         }
 
-        if (defValue instanceof String) {
-            value = sp.getString(key, (String) defValue);
-        }
-
-        if (defValue instanceof Long) {
-            value = sp.getLong(key, (Long) defValue);
-        }
-
-        if (defValue instanceof Float) {
-            value = sp.getFloat(key, (Float) defValue);
-        }
-
-        if (defValue instanceof Integer) {
-            value = sp.getInt(key, (Integer) defValue);
-        }
-
-        return value;
+        return sp.getLong(SP_SAVE_TIME_KEY, TimeDateUtil.ONE_MINTER);
     }
 }

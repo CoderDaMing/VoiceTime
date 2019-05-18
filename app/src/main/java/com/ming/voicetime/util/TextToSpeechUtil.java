@@ -29,6 +29,15 @@ public class TextToSpeechUtil {
 
     private static final String TAG = "TTS";
     private TextToSpeech textToSpeech = null;//创建自带语音对象
+    private boolean isPlay = false;
+
+    public boolean isPlay() {
+        return isPlay;
+    }
+
+    public void setPlay(boolean play) {
+        isPlay = play;
+    }
 
     private void initTTS() {
         if (textToSpeech == null) {
@@ -53,7 +62,7 @@ public class TextToSpeechUtil {
         }
     }
 
-    public void speak() {
+    public void speakCurrenTime() {
         initTTS();
         //输入中文，若不支持的设备则不会读出来
         String data = TimeDateUtil.long2String(System.currentTimeMillis(), TimeDateUtil.hm);
