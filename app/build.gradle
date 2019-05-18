@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+//            keyAlias 'voicetime'
+//            keyPassword '20161128'
+//            storeFile file('C:/Users/androidkey/voicetime.jks')
+//            storePassword '20161128'
+        }
+    }
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.ming.voicetime"
@@ -13,11 +22,23 @@ android {
             //APP的build.gradle设置支持的SO库架构
             abiFilters 'armeabi'
         }
+        //突破65536方法数限制
+        multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //是否优化zip
+            zipAlignEnabled true
+            // 是否去除无效的资源文件
+            shrinkResources true
+            //突破65536方法数限制
+            multiDexEnabled true
+            //混淆配置时改为true,proguard-rules.pro配置相关
+            minifyEnabled true
+            //混淆规则文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //签名
+            signingConfig signingConfigs.release
         }
     }
 
@@ -29,8 +50,8 @@ android {
     }
 
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
@@ -42,7 +63,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
+    //Android的分包库
+    implementation 'com.android.support:multidex:1.0.3'
     //腾讯 bugly
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.0'//其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
 }
