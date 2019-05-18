@@ -17,6 +17,7 @@ public class MyApp extends Application {
         //single
         instance = this;
         //统一初始化方法
+        Bugly.setAppChannel(getApplicationContext(), "GitHub");
         Bugly.init(getApplicationContext(), "626d26ad65", false);
     }
 
