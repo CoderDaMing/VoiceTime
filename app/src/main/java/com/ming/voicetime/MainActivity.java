@@ -26,6 +26,9 @@ import com.ming.voicetime.util.TimeDateUtil;
 
 public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener {
     private PermissionHelper permissionHelper;
+    private TextView tv_current_date;
+    private TextView tv_vocie_language;
+    private TextView tv_vocie_dur;
     private FloatingActionButton fab;
 
     //region Handler
@@ -43,10 +46,16 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
     }
 
     private void sendTask() {
+        TextToSpeechUtil.getInstance().speakCurrenTime();
         mHandler.removeMessages(0);
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(0, saveDelayMillis);
         TextToSpeechUtil.getInstance().setPlay(true);
+        if (TextToSpeechUtil.getInstance().isZh()){
+            tv_vocie_language.setText("中文");
+        }else {
+            tv_vocie_language.setText("英文");
+        }
     }
     //endregion
 
@@ -66,6 +75,14 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        tv_current_date = findViewById(R.id.tv_current_date);
+        tv_current_date.setText(TimeDateUtil.long2String(System.currentTimeMillis(), TimeDateUtil.ymd));
+
+        tv_vocie_language = findViewById(R.id.tv_vocie_language);
+        tv_vocie_dur = findViewById(R.id.tv_vocie_dur);
+        saveDelayMillis = SpUtil.getTimeValue();
+        tv_vocie_dur.setText(saveDelayMillis / TimeDateUtil.ONE_MINTER + "");
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -89,16 +106,16 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
 
     @Override
     public void onClick(View v) {
-        Snackbar.make(v, "Start Task", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-        saveDelayMillis = SpUtil.getTimeValue();
         if (TextToSpeechUtil.getInstance().isPlay()) {
             clearTask();
-            fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
-        } else {
             fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+            Snackbar.make(v, "Stop Task", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        } else {
+            fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
             sendTask();
-
+            Snackbar.make(v, "Start Task", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
     }
 
@@ -145,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
             SpUtil.putTimeValue(saveDelayMillis);
             sendTask();
             dialog.dismiss();
+            Snackbar.make(fab, "Update Task", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         });
         dialog.setContentView(view);
         dialog.show();

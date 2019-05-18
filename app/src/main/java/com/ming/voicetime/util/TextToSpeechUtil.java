@@ -80,4 +80,8 @@ public class TextToSpeechUtil {
             textToSpeech.shutdown(); // 关闭，释放资源
         }
     }
+
+    public boolean isZh(){
+        return textToSpeech !=null && Locale.SIMPLIFIED_CHINESE.equals(textToSpeech.getLanguage());
+    }
 }
