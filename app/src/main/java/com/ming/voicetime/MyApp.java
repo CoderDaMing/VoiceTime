@@ -3,6 +3,8 @@ package com.ming.voicetime;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.multidex.MultiDex;
 
 import com.tencent.bugly.Bugly;
@@ -17,8 +19,23 @@ public class MyApp extends Application {
         //single
         instance = this;
         //统一初始化方法
-        Bugly.setAppChannel(getApplicationContext(), "GitHub");
+        //设置渠道
+        Bugly.setAppChannel(getApplicationContext(), getMetaDataChannel());
+        //初始化
         Bugly.init(getApplicationContext(), "626d26ad65", false);
+    }
+
+    //获取value
+    private String getMetaDataChannel() {
+        String value = "";
+        try {
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(),
+                    PackageManager.GET_META_DATA);
+            value = appInfo.metaData.getString("channel_name");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return value;
     }
 
     /**

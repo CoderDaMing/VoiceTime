@@ -1,0 +1,44 @@
+apply plugin: 'AndResGuard'
+
+andResGuard {
+    // mappingFile = file("./resource_mapping.txt")
+    mappingFile = null
+
+
+    //Do NOT enable 7zip compression(use7zip) when you distribute your APP on Google
+    //Play. It'll prevent the file-by-file patch when updating your APP.
+    use7zip = false
+
+    useSign = true
+    // it will keep the origin path of your resources when it's true
+    keepRoot = false
+
+    whiteList = [
+            // your icon
+
+            // for fabric
+            "R.string.com.crashlytics.*",
+            // for google-services
+            "R.string.google_app_id",
+            "R.string.gcm_defaultSenderId",
+            "R.string.default_web_client_id",
+            "R.string.ga_trackingId",
+            "R.string.firebase_database_url",
+            "R.string.google_api_key",
+            "R.string.google_crash_reporting_api_key"
+    ]
+    compressFilePattern = [
+            "*.webp",
+            "*.png",
+            "*.jpg",
+            "*.jpeg",
+            "*.gif",
+//Do NOT add resource.asrc into compressFilePattern unless the app size is really matter //to you.
+
+    ]
+    sevenzip {
+        artifact = 'com.tencent.mm:SevenZip:1.2.15'
+        //path = "/usr/local/bin/7za"
+    }
+}
+
