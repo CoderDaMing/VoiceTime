@@ -10,6 +10,21 @@ android {
         }
     }
 
+    //渠道配置，通过产品微调的功能来配置
+    productFlavors {
+        //添加一个产品配置项，名称是VoiceTime
+        CHANNEL_FIR {
+            flavorDimensions "3"
+            //表示清单文件中有一个占位符channel，编译的时候会将它的值替换
+            manifestPlaceholders = [channel:"fir"]
+        }
+
+        CHANNEL_360 {
+            flavorDimensions "3"
+            manifestPlaceholders = [channel:"360"]
+        }
+    }
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.ming.voicetime"

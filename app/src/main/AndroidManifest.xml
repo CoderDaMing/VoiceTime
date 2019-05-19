@@ -32,6 +32,8 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
+        <!--渠道号-->
+        <meta-data android:name="CHANNEL_FIR" android:value="${channel}" />
 
         <activity
             android:name=".MainActivity"
