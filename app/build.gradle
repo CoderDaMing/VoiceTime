@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply from: 'and_res_guard.gradle'
-
+// 依赖插件脚本
+apply from: 'tinker-support.gradle'
 android {
     signingConfigs {
         release {
@@ -32,7 +33,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 3
-        versionName "1.0.2"
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //APP的build.gradle设置支持的SO库架构
@@ -61,7 +62,7 @@ android {
     // 自定义输出配置
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "voicetime_v${variant.versionName}_${variant.name}.apk"
+            outputFileName = "voicetime_${variant.versionCode}-${variant.versionName}-${releaseTime()}.apk"
         }
     }
 
@@ -69,6 +70,11 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+}
+
+//获取编译时间
+static def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }
 
 dependencies {
@@ -83,4 +89,6 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     //腾讯 bugly
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.0'//其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
+    // 指定tinker依赖版本（注：应用升级1.3.5版本起，不再内置tinker）
+    implementation 'com.tencent.tinker:tinker-android-lib:1.9.9'
 }

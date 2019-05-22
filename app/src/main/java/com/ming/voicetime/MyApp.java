@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.support.multidex.MultiDex;
 
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 
 public class MyApp extends Application {
     @SuppressLint("StaticFieldLeak")
@@ -52,5 +53,7 @@ public class MyApp extends Application {
         super.attachBaseContext(base);
         //MultiDex
         MultiDex.install(this);
+        // 安装tinker
+        Beta.installTinker();
     }
 }
