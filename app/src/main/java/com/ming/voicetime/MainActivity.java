@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -34,12 +35,11 @@ import com.ming.voicetime.weather.WeatherSearchActivity;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener, WeatherSearch.OnWeatherSearchListener {
+public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener, WeatherSearch.OnWeatherSearchListener ,SwipeRefreshLayout.OnRefreshListener{
     private static final String TAG = "MainActivity";
     private PermissionHelper permissionHelper;
     private FloatingActionButton fab;
-    private TextView tv_current_date_weather;
-    private TextView tv_current_date_forecast;
+    private SwipeRefreshLayout swipe_refresh;
 
     //region Handler
     private final Handler mHandler = new Handler(msg -> {
@@ -85,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        swipe_refresh = findViewById(R.id.swipe_refresh);
+        swipe_refresh.setOnRefreshListener(this);
 
         city = (TextView) findViewById(R.id.city);
         city.setOnClickListener(this);
@@ -143,6 +146,11 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         }
     }
 
+    @Override
+    public void onRefresh() {
+        getWeatherReport();
+    }
+
     //region 天气
     private TextView city;
     private TextView reporttime1;
@@ -186,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
     }
 
     private void setWeatherLive(LocalWeatherLive weatherlive) {
+        swipe_refresh.setRefreshing(false);
         if (weatherlive != null) {
             reporttime1.setText(weatherlive.getReportTime() + "发布");
             weather.setText(weatherlive.getWeather());
