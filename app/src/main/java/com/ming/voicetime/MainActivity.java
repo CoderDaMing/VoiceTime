@@ -19,6 +19,7 @@ import com.ming.voicetime.permissions.PermissionsUtil;
 import com.ming.voicetime.util.TextToSpeechUtil;
 import com.ming.voicetime.util.TimeDateUtil;
 import com.ming.voicetime.util.VersionUtil;
+import com.ming.voicetime.weather.WeatherSearchActivity;
 
 public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -73,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         TextView tv_current_date = findViewById(R.id.tv_current_date);
         tv_current_date.setText(TimeDateUtil.long2String(System.currentTimeMillis(), TimeDateUtil.ymd));
 
+        TextView tv_current_date_weather = findViewById(R.id.tv_current_date_weather);
+        tv_current_date_weather.setOnClickListener(this);
+
         TextView tv_version = findViewById(R.id.tv_version);
         tv_version.setText("版本：" + VersionUtil.getVerName(this));
 
@@ -98,16 +102,25 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
 
     @Override
     public void onClick(View v) {
-        if (TextToSpeechUtil.getInstance().isPlay()) {
-            clearTask();
-            fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
-            Snackbar.make(v, "Stop Task", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        } else {
-            sendTask();
-            fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
-            Snackbar.make(v, "Start Task", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+        switch (v.getId()) {
+            case R.id.tv_current_date_weather:
+                startActivity(new Intent(this, WeatherSearchActivity.class));
+                break;
+            case R.id.fab:
+                if (TextToSpeechUtil.getInstance().isPlay()) {
+                    clearTask();
+                    fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+                    Snackbar.make(v, "Stop Task", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } else {
+                    sendTask();
+                    fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
+                    Snackbar.make(v, "Start Task", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                break;
+            default:
+                break;
         }
     }
 

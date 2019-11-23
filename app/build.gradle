@@ -18,12 +18,12 @@ android {
         CHANNEL_FIR {
             flavorDimensions "3"
             //表示清单文件中有一个占位符channel，编译的时候会将它的值替换
-            manifestPlaceholders = [channel:"fir"]
+            manifestPlaceholders = [channel:"fir",amap_key:"cf0f30784224ac1c176e773549bdeff8"]
         }
 
         CHANNEL_360 {
             flavorDimensions "3"
-            manifestPlaceholders = [channel:"360"]
+            manifestPlaceholders = [channel:"360",amap_key:"cf0f30784224ac1c176e773549bdeff8"]
         }
     }
 
@@ -42,6 +42,13 @@ android {
         //突破65536方法数限制
         multiDexEnabled true
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
     buildTypes {
         release {
             //是否优化zip
