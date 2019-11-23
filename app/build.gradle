@@ -7,7 +7,7 @@ android {
         release {
             keyAlias 'VoiceTime'
             keyPassword '19921215'
-            storeFile file('/Users/sunday/Documents/VoiceTime')
+            storeFile file('/Users/sunday/Documents/VoiceTime.jks')
             storePassword '19921215'
         }
     }
