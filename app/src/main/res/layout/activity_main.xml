@@ -28,7 +28,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="50dp"
-        android:backgroundTint="#057dff"
+        android:backgroundTint="@android:color/black"
         app:srcCompat="@android:drawable/ic_media_play" />
 
     <include layout="@layout/content_main" />

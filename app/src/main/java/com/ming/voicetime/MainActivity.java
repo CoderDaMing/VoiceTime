@@ -1,5 +1,6 @@
 package com.ming.voicetime;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,18 +14,32 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.weather.LocalDayWeatherForecast;
+import com.amap.api.services.weather.LocalWeatherForecast;
+import com.amap.api.services.weather.LocalWeatherForecastResult;
+import com.amap.api.services.weather.LocalWeatherLive;
+import com.amap.api.services.weather.LocalWeatherLiveResult;
+import com.amap.api.services.weather.WeatherSearch;
+import com.amap.api.services.weather.WeatherSearchQuery;
 import com.ming.voicetime.permissions.PermissionHelper;
 import com.ming.voicetime.permissions.PermissionCallBack;
 import com.ming.voicetime.permissions.PermissionsUtil;
+import com.ming.voicetime.util.SpUtil;
 import com.ming.voicetime.util.TextToSpeechUtil;
 import com.ming.voicetime.util.TimeDateUtil;
+import com.ming.voicetime.util.ToastUtil;
 import com.ming.voicetime.util.VersionUtil;
 import com.ming.voicetime.weather.WeatherSearchActivity;
 
-public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener, WeatherSearch.OnWeatherSearchListener {
     private static final String TAG = "MainActivity";
     private PermissionHelper permissionHelper;
     private FloatingActionButton fab;
+    private TextView tv_current_date_weather;
+    private TextView tv_current_date_forecast;
 
     //region Handler
     private final Handler mHandler = new Handler(msg -> {
@@ -71,11 +86,13 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TextView tv_current_date = findViewById(R.id.tv_current_date);
-        tv_current_date.setText(TimeDateUtil.long2String(System.currentTimeMillis(), TimeDateUtil.ymd));
-
-        TextView tv_current_date_weather = findViewById(R.id.tv_current_date_weather);
-        tv_current_date_weather.setOnClickListener(this);
+        city = (TextView) findViewById(R.id.city);
+        city.setOnClickListener(this);
+        reporttime1 = (TextView) findViewById(R.id.reporttime1);
+        weather = (TextView) findViewById(R.id.weather);
+        Temperature = (TextView) findViewById(R.id.temp);
+        wind = (TextView) findViewById(R.id.wind);
+        humidity = (TextView) findViewById(R.id.humidity);
 
         TextView tv_version = findViewById(R.id.tv_version);
         tv_version.setText("版本：" + VersionUtil.getVerName(this));
@@ -84,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         fab.setOnClickListener(this);
 
         initPermissionsHelper();
+        getWeatherReport();
     }
 
     @Override
@@ -97,13 +115,14 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         super.onDestroy();
         clearTask();
         TextToSpeechUtil.getInstance().destroy();
+
     }
     //endregion
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_current_date_weather:
+            case R.id.city:
                 startActivity(new Intent(this, WeatherSearchActivity.class));
                 break;
             case R.id.fab:
@@ -123,6 +142,70 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
                 break;
         }
     }
+
+    //region 天气
+    private TextView city;
+    private TextView reporttime1;
+    private TextView weather;
+    private TextView Temperature;
+    private TextView wind;
+    private TextView humidity;
+    private WeatherSearchQuery mquery;
+    private WeatherSearch mweathersearch;
+    private String cityname;
+
+    private void getWeatherReport() {
+        cityname = SpUtil.getString(MainActivity.this, SpUtil.SP_FILE, SpUtil.CITY_NAME, SpUtil.DEFAULT_CITY);
+        mquery = new WeatherSearchQuery(cityname, WeatherSearchQuery.WEATHER_TYPE_LIVE);//检索参数为城市和天气类型，实时天气为1、天气预报为2
+        mweathersearch = new WeatherSearch(this);
+        mweathersearch.setOnWeatherSearchListener(this);
+        mweathersearch.setQuery(mquery);
+        mweathersearch.searchWeatherAsyn(); //异步搜索
+    }
+
+    /**
+     * 实时天气查询回调
+     */
+    @Override
+    public void onWeatherLiveSearched(LocalWeatherLiveResult weatherLiveResult, int rCode) {
+        if (MainActivity.this.isFinishing() || MainActivity.this.isDestroyed()){
+            return;
+        }
+
+        if (rCode == AMapException.CODE_AMAP_SUCCESS) {
+            if (weatherLiveResult != null && weatherLiveResult.getLiveResult() != null) {
+                setWeatherLive(weatherLiveResult.getLiveResult());
+            } else {
+                ToastUtil.show(MainActivity.this, R.string.no_result);
+                setWeatherLive(null);
+            }
+        } else {
+            ToastUtil.showerror(MainActivity.this, rCode);
+            setWeatherLive(null);
+        }
+    }
+
+    private void setWeatherLive(LocalWeatherLive weatherlive) {
+        if (weatherlive != null) {
+            reporttime1.setText(weatherlive.getReportTime() + "发布");
+            weather.setText(weatherlive.getWeather());
+            Temperature.setText(weatherlive.getTemperature() + "°");
+            wind.setText(weatherlive.getWindDirection() + "风     " + weatherlive.getWindPower() + "级");
+            humidity.setText("湿度         " + weatherlive.getHumidity() + "%");
+        } else {
+            reporttime1.setText("-");
+            weather.setText("-");
+            Temperature.setText("-");
+            wind.setText("-");
+            humidity.setText("-");
+        }
+    }
+
+    @Override
+    public void onWeatherForecastSearched(LocalWeatherForecastResult weatherForecastResult, int rCode) {
+
+    }
+    //endregion
 
     //region 权限
     public void initPermissionsHelper() {

@@ -16,6 +16,7 @@ import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearch.OnWeatherSearchListener;
 import com.amap.api.services.weather.WeatherSearchQuery;
 import com.ming.voicetime.R;
+import com.ming.voicetime.util.SpUtil;
 import com.ming.voicetime.util.ToastUtil;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class WeatherSearchActivity extends Activity implements OnWeatherSearchLi
     private WeatherSearchQuery mquery;
     private WeatherSearch mweathersearch;
 
-    private String cityname = "北京市";//天气搜索的城市，可以写名称或adcode；
+    private String cityname = SpUtil.DEFAULT_CITY;//天气搜索的城市，可以写名称或adcode；
     private SearchView city_sv;
     private TextView city;
 
@@ -98,6 +99,8 @@ public class WeatherSearchActivity extends Activity implements OnWeatherSearchLi
 
     private void setWeatherLive(LocalWeatherLive weatherlive) {
         if (weatherlive != null) {
+            SpUtil.putString(WeatherSearchActivity.this,SpUtil.SP_FILE,SpUtil.CITY_NAME,cityname);
+
             reporttime1.setText(weatherlive.getReportTime() + "发布");
             weather.setText(weatherlive.getWeather());
             Temperature.setText(weatherlive.getTemperature() + "°");
@@ -136,6 +139,8 @@ public class WeatherSearchActivity extends Activity implements OnWeatherSearchLi
 
     private void fillforecast(LocalWeatherForecast weatherforecast) {
         if (weatherforecast != null) {
+            SpUtil.putString(WeatherSearchActivity.this,SpUtil.SP_FILE,SpUtil.CITY_NAME,cityname);
+
             List<LocalDayWeatherForecast> forecastlist = weatherforecast.getWeatherForecast();
             reporttime2.setText(weatherforecast.getReportTime() + "发布");
             String forecast = "";
