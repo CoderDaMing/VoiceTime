@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -104,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         fab.setOnClickListener(this);
 
         initPermissionsHelper();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getWeatherReport();
     }
 
@@ -160,10 +166,17 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
     private TextView humidity;
     private WeatherSearchQuery mquery;
     private WeatherSearch mweathersearch;
-    private String cityname;
+    private String cityname = null;
 
     private void getWeatherReport() {
-        cityname = SpUtil.getString(MainActivity.this, SpUtil.SP_FILE, SpUtil.CITY_NAME, SpUtil.DEFAULT_CITY);
+        String spName = SpUtil.getString(MainActivity.this, SpUtil.SP_FILE, SpUtil.CITY_NAME, SpUtil.DEFAULT_CITY);
+        if (spName.equals(cityname)){
+            swipe_refresh.setRefreshing(false);
+            return;
+        }else {
+            cityname = spName;
+        }
+
         mquery = new WeatherSearchQuery(cityname, WeatherSearchQuery.WEATHER_TYPE_LIVE);//检索参数为城市和天气类型，实时天气为1、天气预报为2
         mweathersearch = new WeatherSearch(this);
         mweathersearch.setOnWeatherSearchListener(this);
@@ -196,6 +209,8 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
     private void setWeatherLive(LocalWeatherLive weatherlive) {
         swipe_refresh.setRefreshing(false);
         if (weatherlive != null) {
+            city.setText(cityname);
+
             reporttime1.setText(weatherlive.getReportTime() + "发布");
             weather.setText(weatherlive.getWeather());
             Temperature.setText(weatherlive.getTemperature() + "°");
