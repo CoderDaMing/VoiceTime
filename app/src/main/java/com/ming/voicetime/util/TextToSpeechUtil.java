@@ -1,6 +1,7 @@
 package com.ming.voicetime.util;
 
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.ming.voicetime.MyApp;
@@ -62,14 +63,20 @@ public class TextToSpeechUtil {
         }
     }
 
-    public void speakCurrenTime() {
+    public void speakCurrentTime(long time, boolean isWholeMin) {
+        setPlay(true);
         initTTS();
         //输入中文，若不支持的设备则不会读出来
-        String data = TimeDateUtil.long2String(System.currentTimeMillis(), TimeDateUtil.hm);
-        textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+        String data = TimeDateUtil.long2String(time, TimeDateUtil.hms);
+        Log.i(TAG, ": speakCurrenTime:" + data + " isWholeMin:" + isWholeMin);
+        String dataMin = TimeDateUtil.long2String(time, TimeDateUtil.hm);
+        if (isWholeMin) {
+            textToSpeech.speak(dataMin, TextToSpeech.QUEUE_FLUSH, null);
+        }
     }
 
     public void stop() {
+        setPlay(false);
         if (textToSpeech != null) {
             textToSpeech.stop(); // 不管是否正在朗读TTS都被打断
         }

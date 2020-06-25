@@ -1,9 +1,11 @@
 package com.ming.voicetime;
 
-import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,14 +13,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.amap.api.services.core.AMapException;
-import com.amap.api.services.weather.LocalDayWeatherForecast;
-import com.amap.api.services.weather.LocalWeatherForecast;
 import com.amap.api.services.weather.LocalWeatherForecastResult;
 import com.amap.api.services.weather.LocalWeatherLive;
 import com.amap.api.services.weather.LocalWeatherLiveResult;
@@ -27,48 +26,18 @@ import com.amap.api.services.weather.WeatherSearchQuery;
 import com.ming.voicetime.permissions.PermissionHelper;
 import com.ming.voicetime.permissions.PermissionCallBack;
 import com.ming.voicetime.permissions.PermissionsUtil;
+import com.ming.voicetime.service.ForegroundService;
 import com.ming.voicetime.util.SpUtil;
 import com.ming.voicetime.util.TextToSpeechUtil;
-import com.ming.voicetime.util.TimeDateUtil;
 import com.ming.voicetime.util.ToastUtil;
 import com.ming.voicetime.util.VersionUtil;
 import com.ming.voicetime.weather.WeatherSearchActivity;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PermissionCallBack, View.OnClickListener, WeatherSearch.OnWeatherSearchListener ,SwipeRefreshLayout.OnRefreshListener{
     private static final String TAG = "MainActivity";
     private PermissionHelper permissionHelper;
     private FloatingActionButton fab;
     private SwipeRefreshLayout swipe_refresh;
-
-    //region Handler
-    private final Handler mHandler = new Handler(msg -> {
-        long timeMillis = System.currentTimeMillis();
-        String timeString = TimeDateUtil.long2String(timeMillis, TimeDateUtil.ss);
-        Log.i(TAG, ": timeString:" + timeString);
-        if (timeString.equals("00")) {
-            TextToSpeechUtil.getInstance().speakCurrenTime();
-        }
-        sendEmptyMessageDelayed(0, 1000);
-        return false;
-    });
-
-    private void sendEmptyMessageDelayed(int what, long time) {
-        mHandler.sendEmptyMessageDelayed(what, time);
-    }
-
-    private void clearTask() {
-        mHandler.removeMessages(0);
-        TextToSpeechUtil.getInstance().setPlay(false);
-    }
-
-    private void sendTask() {
-        TextToSpeechUtil.getInstance().speakCurrenTime();
-        mHandler.sendEmptyMessage(0);
-        TextToSpeechUtil.getInstance().setPlay(true);
-    }
-    //endregion
 
     //region 生命周期
     @Override
@@ -108,6 +77,15 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: ");
+        //绑定到服务。如果服务处于前台模式，则会向服务发出信号，因为此活动位于前台，所以该服务可以退出前台模式
+        bindService(new Intent(this, ForegroundService.class), mServiceConnection,
+                Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         getWeatherReport();
@@ -115,16 +93,23 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
 
     @Override
     protected void onStop() {
+        Log.i(TAG, "onStop: ");
+        if (mBound) {
+            //取消绑定服务。这向服务发出信号，表明该活动不再位于前台，并且该服务可以通过将自身提升为前台服务来进行响应。
+            unbindService(mServiceConnection);
+            mBound = false;
+        }
         super.onStop();
-        TextToSpeechUtil.getInstance().stop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        clearTask();
+        Log.i(TAG, "onDestroy: ");
+        if (mService != null) {
+            mService.clearTask();
+        }
         TextToSpeechUtil.getInstance().destroy();
-
     }
     //endregion
 
@@ -136,12 +121,16 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
                 break;
             case R.id.fab:
                 if (TextToSpeechUtil.getInstance().isPlay()) {
-                    clearTask();
+                    if (mService != null) {
+                        mService.clearTask();
+                    }
                     fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
                     Snackbar.make(v, "Stop Task", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
-                    sendTask();
+                    if (mService != null) {
+                        mService.sendTask(true);
+                    }
                     fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
                     Snackbar.make(v, "Start Task", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -273,5 +262,30 @@ public class MainActivity extends AppCompatActivity implements PermissionCallBac
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         permissionHelper.onRequestPermissionsResult(MainActivity.this, requestCode, permissions, grantResults);
     }
+    //endregion
+
+    //region Service
+    private ForegroundService mService = null;
+    // 跟踪服务的绑定状态。
+    private boolean mBound = false;
+
+    //监视与服务的连接状态。
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ForegroundService.LocalBinder binder = (ForegroundService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+            startService(new Intent(getApplicationContext(), ForegroundService.class));
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+
+    };
     //endregion
 }

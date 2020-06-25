@@ -14,6 +14,7 @@ public class TimeDateUtil {
 //    public static final String ymdhm = "yyyy-MM-dd HH:mm";
     public static final String ymd = "yyyy-MM-dd";
 //    public static final String ymds = "yyyy年MM月dd日";
+    public static final String hms = "HH:mm:ss";
     public static final String hm = "HH:mm";
     public static final String ss = "ss";
 
